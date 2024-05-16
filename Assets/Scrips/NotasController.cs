@@ -17,6 +17,17 @@ public class NotasController : MonoBehaviour
     {
         rb.velocity = Vector2.left * velocity * Time.deltaTime;
     }
-    
-    
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnBecameInvisible()
+    {
+        Destroy(gameObject);
+    }
 }
