@@ -260,7 +260,8 @@ MonoBehaviour:
   upperPosition: {x: -7, y: 3}
   lowerPosition: {x: -7, y: -3}
   centerPosition: {x: -7, y: 0}
-  speed: 10
+  speed: 100
+  returnDelay: 0.3
 --- !u!50 &129340431
 Rigidbody2D:
   serializedVersion: 4

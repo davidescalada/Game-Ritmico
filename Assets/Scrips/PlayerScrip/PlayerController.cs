@@ -8,9 +8,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 lowerPosition;
     [SerializeField] Vector2 centerPosition ;
     [SerializeField] float speed;
+    [SerializeField] float returnDelay;
     private Vector2 targetPosition;
     private Rigidbody2D rb;
     public static event Action OnNoteCollided;
+    private Coroutine moveCoroutine;
+    private bool isCollidingWithNote = false;
+    private Collider2D currentNoteCollider;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -21,6 +25,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PosicionamientoInputs();
+        CheckSpaceKey();
     }
 
     private void FixedUpdate()
@@ -32,25 +37,62 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Notas"))
         {
-            Debug.Log("Player colisiono con una nota");
-            OnNoteCollided?.Invoke();
+            isCollidingWithNote = true;     
+            currentNoteCollider = collision;
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Notas"))
+        {
+            isCollidingWithNote = false;
+            currentNoteCollider = null;
+        }
+        
+    }
     private void PosicionamientoInputs()
     {
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            targetPosition = upperPosition;
+            if (moveCoroutine != null)
+            {
+                StopCoroutine(moveCoroutine);
+            }
+            moveCoroutine = StartCoroutine(MoveAndReturn(upperPosition));
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            targetPosition = lowerPosition;
-        }
-        else
-        {
-            targetPosition = centerPosition;
+            if (moveCoroutine != null)
+            {
+                StopCoroutine(moveCoroutine);
+            }
+            moveCoroutine = StartCoroutine(MoveAndReturn(lowerPosition));
         }
     }
 
+    private IEnumerator MoveAndReturn(Vector2 newPosition)
+    {
+        targetPosition = newPosition;
+        yield return new WaitForSeconds(returnDelay);
+        targetPosition = centerPosition;
+    }
+
+    private void CheckSpaceKey()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isCollidingWithNote)
+        {
+             Debug.Log("Player colisiono con una nota");
+             OnNoteCollided?.Invoke();
+
+            if (currentNoteCollider != null)
+            {
+                NotasController notasController = currentNoteCollider.GetComponent<NotasController>();
+                if (notasController != null)
+                {
+                    notasController.DeleteNote();
+                }
+            }
+        }
+    }
 }
