@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Vector2 upperPosition;
@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed;
     private Vector2 targetPosition;
     private Rigidbody2D rb;
+    public static event Action OnNoteCollided;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Notas"))
         {
             Debug.Log("Player colisiono con una nota");
+            OnNoteCollided?.Invoke();
         }
     }
 
@@ -50,4 +52,5 @@ public class PlayerController : MonoBehaviour
             targetPosition = centerPosition;
         }
     }
+
 }
