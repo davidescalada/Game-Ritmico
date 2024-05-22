@@ -6,10 +6,11 @@ public class NotasController : MonoBehaviour
 {
     [SerializeField] float velocity;
     private Rigidbody2D rb;
-    public SceneController sceneController;
+    private SceneController sceneController;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sceneController = FindObjectOfType<SceneController>();
     }
 
    
@@ -26,5 +27,14 @@ public class NotasController : MonoBehaviour
     private void OnBecameInvisible()
     {
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("ResetCombo"))
+        {
+             Debug.Log("RESETO EL COMBO");
+             sceneController.ResetCombo();
+        }
     }
 }

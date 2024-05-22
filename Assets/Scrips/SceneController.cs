@@ -36,11 +36,13 @@ public class SceneController : MonoBehaviour
     private void OnEnable()
     {
         PlayerController.OnNoteCollided += IncrementCombo;
+        PlayerController.OnNotaGudCollided += IncrementCombo;
     }
 
     private void OnDisable()
     {
         PlayerController.OnNoteCollided -= IncrementCombo;
+        PlayerController.OnNotaGudCollided -= IncrementCombo;
     }
     private void IncrementCombo()
     {

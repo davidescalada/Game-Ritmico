@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 targetPosition;
     private Rigidbody2D rb;
     public static event Action OnNoteCollided;
+    public static event Action OnNotaGudCollided;
     private Coroutine moveCoroutine;
     private bool isCollidingWithNote = false;
     private Collider2D currentNoteCollider;
@@ -21,7 +22,6 @@ public class PlayerController : MonoBehaviour
         targetPosition = centerPosition;
     }
 
-    // Update is called once per frame
     void Update()
     {
         PosicionamientoInputs();
@@ -39,6 +39,15 @@ public class PlayerController : MonoBehaviour
         {
             isCollidingWithNote = true;     
             currentNoteCollider = collision;
+        }
+        if (collision.CompareTag("NotaGud"))
+        {
+            NotasController notaGud = collision.GetComponent<NotasController>();
+            if (notaGud != null)
+            {
+                OnNotaGudCollided.Invoke();
+                notaGud.DeleteNote();
+            }
         }
     }
 
