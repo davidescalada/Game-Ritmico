@@ -106,7 +106,6 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isCollidingWithNote)
         {
-             Debug.Log("Player colisiono con una nota");
              OnNoteCollided?.Invoke();
 
             if (currentNoteCollider != null)

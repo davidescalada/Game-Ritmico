@@ -33,8 +33,8 @@ public class NotasController : MonoBehaviour
     {
         if (collision.CompareTag("ResetCombo"))
         {
-             Debug.Log("RESETO EL COMBO");
              sceneController.ResetCombo();
+            DeleteNote();
         }
     }
 }
