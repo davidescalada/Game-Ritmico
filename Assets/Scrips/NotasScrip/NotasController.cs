@@ -6,10 +6,11 @@ public class NotasController : MonoBehaviour
 {
     [SerializeField] float velocity;
     private Rigidbody2D rb;
-   
+    private SceneController sceneController;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sceneController = FindObjectOfType<SceneController>();
     }
 
    
@@ -18,16 +19,22 @@ public class NotasController : MonoBehaviour
         rb.velocity = Vector2.left * velocity * Time.deltaTime;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void DeleteNote()
     {
-        if (collision.tag == "Player")
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 
     private void OnBecameInvisible()
     {
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("ResetCombo"))
+        {
+             sceneController.ResetCombo();
+            DeleteNote();
+        }
     }
 }
