@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+
 public class SceneController : MonoBehaviour
 {
-    
     public TMP_Text textCombo;
+    public TMP_Text feedbackText;
     public int contadorCombo = 0;
-    // Start is called before the first frame update
+    public EnemyController enemyController;
     void Start()
     {
-        
+        enemyController = FindObjectOfType<EnemyController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         ReloadScene();
@@ -30,26 +30,39 @@ public class SceneController : MonoBehaviour
         {
             Application.Quit();
         }
-           
     }
 
     private void OnEnable()
     {
-        PlayerController.OnNoteCollided += IncrementCombo;
-        PlayerController.OnNotaGudCollided += IncrementCombo;
+        PlayerController.OnNoteCollided += HandleNoteCollision;
     }
 
     private void OnDisable()
     {
-        PlayerController.OnNoteCollided -= IncrementCombo;
-        PlayerController.OnNotaGudCollided -= IncrementCombo;
+        PlayerController.OnNoteCollided -= HandleNoteCollision;
     }
+
+    private void HandleNoteCollision(string result)
+    {
+        ShowFeedback(result);
+
+        if (result == "¡Excelente!" || result == "Bien" || result == "Perfecto")
+        {
+            IncrementCombo();
+            enemyController.MoveLeft();
+        }
+        else if (result == "Falló")
+        {
+            ResetCombo();
+        }
+    }
+
     private void IncrementCombo()
     {
         contadorCombo++;
         UpdatedComboText();
     }
- 
+
     public void ResetCombo()
     {
         contadorCombo = 0;
@@ -59,5 +72,17 @@ public class SceneController : MonoBehaviour
     private void UpdatedComboText()
     {
         textCombo.text = "Combo: " + contadorCombo.ToString();
+    }
+
+    private void ShowFeedback(string result)
+    {
+        feedbackText.text = result;
+        StartCoroutine(ClearFeedback());
+    }
+
+    private IEnumerator ClearFeedback()
+    {
+        yield return new WaitForSeconds(1.0f);
+        feedbackText.text = "";
     }
 }

@@ -5,15 +5,17 @@ using UnityEngine;
 public class NotasController : MonoBehaviour
 {
     [SerializeField] float velocity;
+    public float spawnTime;
     private Rigidbody2D rb;
     private SceneController sceneController;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sceneController = FindObjectOfType<SceneController>();
+        spawnTime = Time.time;
     }
 
-   
     void FixedUpdate()
     {
         rb.velocity = Vector2.left * velocity * Time.deltaTime;
@@ -33,7 +35,7 @@ public class NotasController : MonoBehaviour
     {
         if (collision.CompareTag("ResetCombo"))
         {
-             sceneController.ResetCombo();
+            sceneController.ResetCombo();
             DeleteNote();
         }
     }
