@@ -43,7 +43,6 @@ public class NotasRespawn : MonoBehaviour
     void Update()
     {
         GetSpectrumAudioSource();
-        Debug.Log("minNoteInterval: " + minNoteInterval);
     }
 
     void GetSpectrumAudioSource()

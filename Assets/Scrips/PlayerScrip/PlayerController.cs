@@ -2,115 +2,87 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Vector2 upperPosition;
-    [SerializeField] Vector2 lowerPosition;
-    [SerializeField] Vector2 centerPosition ;
     [SerializeField] float speed;
     [SerializeField] float returnDelay;
-    private Vector2 targetPosition;
-    private Rigidbody2D rb;
-    public static event Action OnNoteCollided;
-    public static event Action OnNotaGudCollided;
-    private Coroutine moveCoroutine;
-    private bool isCollidingWithNote = false;
-    private Collider2D currentNoteCollider;
+    [SerializeField] float excellentRange = 0.1f;
+    [SerializeField] float goodRange = 0.2f;
+    [SerializeField] float perfectRange = 0.3f;
+
+    public GameObject upperDetector;
+    public GameObject centerDetector;
+    public GameObject lowerDetector;
+
+    private NoteDetector upperNoteDetector;
+    private NoteDetector centerNoteDetector;
+    private NoteDetector lowerNoteDetector;
+
+    public static event Action<string> OnNoteCollided;
+
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        targetPosition = centerPosition;
+        upperNoteDetector = upperDetector.GetComponent<NoteDetector>();
+        centerNoteDetector = centerDetector.GetComponent<NoteDetector>();
+        lowerNoteDetector = lowerDetector.GetComponent<NoteDetector>();
     }
 
     void Update()
     {
-        PosicionamientoInputs();
-        CheckSpaceKey();
+        CheckNoteKeys();
     }
 
-    private void FixedUpdate()
-    {
-        Vector2 newPosition = Vector2.MoveTowards(rb.position, targetPosition, speed * Time.fixedDeltaTime);
-        rb.MovePosition(newPosition);
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Notas"))
-        {
-            isCollidingWithNote = true;     
-            currentNoteCollider = collision;
-        }
-        if (collision.CompareTag("NotaGud"))
-        {
-            NotasController notaGud = collision.GetComponent<NotasController>();
-            if (notaGud != null)
-            {
-                OnNotaGudCollided.Invoke();
-                notaGud.DeleteNote();
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Notas"))
-        {
-            isCollidingWithNote = false;
-            currentNoteCollider = null;
-        }
-        
-    }
-    //private void PosicionamientoInputs()
-    //{
-    //    if (Input.GetKey(KeyCode.UpArrow))
-    //    {
-    //        targetPosition = upperPosition;
-    //    }
-    //    else if (Input.GetKey(KeyCode.DownArrow))
-    //    {
-    //        targetPosition = lowerPosition;
-    //    }
-    //    else
-    //    {
-    //        targetPosition = centerPosition;
-    //    }
-    //}
-    private void PosicionamientoInputs()
+    private void CheckNoteKeys()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (moveCoroutine != null)
-            {
-                StopCoroutine(moveCoroutine);
-            }
-            moveCoroutine = StartCoroutine(MoveAndReturn(upperPosition));
+            ProcessNoteHit(upperNoteDetector);
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (moveCoroutine != null)
-            {
-                StopCoroutine(moveCoroutine);
-            }
-            moveCoroutine = StartCoroutine(MoveAndReturn(lowerPosition));
+            ProcessNoteHit(lowerNoteDetector);
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            ProcessNoteHit(centerNoteDetector);
         }
     }
 
-    private IEnumerator MoveAndReturn(Vector2 newPosition)
+    private void ProcessNoteHit(NoteDetector noteDetector)
     {
-        targetPosition = newPosition;
-        yield return new WaitForSeconds(returnDelay);
-        targetPosition = centerPosition;
-    }
-
-    private void CheckSpaceKey()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && isCollidingWithNote)
+        if (noteDetector.HasCollidingNotes())
         {
-             OnNoteCollided?.Invoke();
-
-            if (currentNoteCollider != null)
+            Collider2D noteCollider = noteDetector.GetFirstCollidingNote();
+            if (noteCollider != null)
             {
-                NotasController notasController = currentNoteCollider.GetComponent<NotasController>();
+                float collisionTime = noteDetector.GetNoteCollisionTime(noteCollider);
+                float hitTime = Mathf.Abs(Time.time - collisionTime); // Calcular hitTime desde la colisión
+                Debug.Log("Hit Time: " + hitTime);
+
+                if (hitTime <= excellentRange)
+                {
+                    Debug.Log("EXCELENTE");
+                    OnNoteCollided?.Invoke("¡Excelente!");
+                }
+                else if (hitTime <= goodRange)
+                {
+                    Debug.Log("BIEN");
+                    OnNoteCollided?.Invoke("Bien");
+                }
+                else if (hitTime <= perfectRange)
+                {
+                    Debug.Log("PERFECTO");
+                    OnNoteCollided?.Invoke("Perfecto");
+                }
+                else
+                {
+                    Debug.Log("FALLO");
+                    OnNoteCollided?.Invoke("Falló");
+                }
+                
+                NotasController notasController = noteCollider.GetComponent<NotasController>();
+                
                 if (notasController != null)
                 {
                     notasController.DeleteNote();
@@ -119,3 +91,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
+
