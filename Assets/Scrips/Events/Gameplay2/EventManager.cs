@@ -32,4 +32,16 @@ public class EventManager : MonoBehaviour
         selectedEvent.Execute();
         lastEvent = selectedEvent;
     }
+
+    public void TriggerSpecificEvent(int index)
+    {
+        if (index >= 0 && index < events.Count)
+        {
+            events[index].Execute();
+        }
+        else
+        {
+            Debug.LogError("El índice del evento está fuera de rango.");
+        }
+    }
 }
