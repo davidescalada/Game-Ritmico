@@ -21,7 +21,7 @@ public class Event2G2 : MonoBehaviour, IEvent
             float x = Random.Range(-vibrationIntensity, vibrationIntensity);
             float y = Random.Range(-vibrationIntensity, vibrationIntensity);
 
-            Camera.main.transform.position = originalPosition + new Vector3(x, y, 0);
+            Camera.main.transform.position = originalPosition + new Vector3(x, y, -10);
             yield return null;
         }
 

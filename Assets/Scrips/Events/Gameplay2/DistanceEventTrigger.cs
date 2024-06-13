@@ -27,18 +27,19 @@ public class DistanceEventTrigger : MonoBehaviour
             eventManager.TriggerRandomEvent();
             triggered75 = true;
         }
-        else if (!triggered50 && distancePercentage <= 50)
+        else if (!triggered50 && distancePercentage <= 55)
         {
             eventManager.TriggerRandomEvent();
             triggered50 = true;
         }
-        else if (!triggered25 && distancePercentage <= 25)
+        else if (!triggered25 && distancePercentage <= 35)
         {
             eventManager.TriggerRandomEvent();
             triggered25 = true;
         }
-        else if (!triggered5 && distancePercentage <= 5)
+        else if (!triggered5 && distancePercentage <= 15)
         {
+            Debug.Log("SE SUPONE QUE ESTE ES EL EVENTO2, VIBRACION ?");
             eventManager.TriggerSpecificEvent(1); // Asumiendo que el evento de vibración es el Event2
             triggered5 = true;
         }
