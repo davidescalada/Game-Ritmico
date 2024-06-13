@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] float returnDelay;
-    [SerializeField] float excellentRange = 0.1f;
-    [SerializeField] float goodRange = 0.2f;
-    [SerializeField] float perfectRange = 0.3f;
+    [SerializeField] float excellentRange = 0.35f;
+    [SerializeField] float goodRange = 0.15f;
+    [SerializeField] float perfectRange = 0.36f;
 
     public GameObject upperDetector;
     public GameObject centerDetector;
@@ -60,17 +60,17 @@ public class PlayerController : MonoBehaviour
                 float hitTime = Mathf.Abs(Time.time - collisionTime); // Calcular hitTime desde la colisión
                 Debug.Log("Hit Time: " + hitTime);
 
-                if (hitTime <= excellentRange)
-                {
-                    Debug.Log("EXCELENTE");
-                    OnNoteCollided?.Invoke("¡Excelente!");
-                }
-                else if (hitTime <= goodRange)
+                if (hitTime <= goodRange)
                 {
                     Debug.Log("BIEN");
                     OnNoteCollided?.Invoke("Bien");
                 }
-                else if (hitTime <= perfectRange)
+                else if (hitTime <= excellentRange)
+                {
+                    Debug.Log("EXCELENTE");
+                    OnNoteCollided?.Invoke("¡Excelente!");
+                }
+                else if (hitTime >= perfectRange)
                 {
                     Debug.Log("PERFECTO");
                     OnNoteCollided?.Invoke("Perfecto");
