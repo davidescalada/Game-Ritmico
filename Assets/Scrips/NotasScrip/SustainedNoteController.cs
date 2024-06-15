@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class SustainedNoteController : MonoBehaviour
 {
+    private SceneController sceneController;
     [SerializeField] float velocity;
     [SerializeField] float endTolerance; // Tolerancia en los últimos píxeles de la nota para considerar "Excelente"
-    [SerializeField] float sustainedDuration; // Duración de la nota sostenida
+ 
     private Rigidbody2D rb;
     private bool isPressed;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
-    private Vector3 originalScale;
     private float startTime;
-    private bool isSustainedNoteActive;
+    //private bool isSustainedNoteActive;
 
     void Start()
     {
+        sceneController = FindObjectOfType<SceneController>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = rb.GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
-        originalScale = transform.localScale;
-        isSustainedNoteActive = false;
+        //isSustainedNoteActive = false;
+        startTime = Time.time;
     }
 
     void FixedUpdate()
@@ -29,10 +30,18 @@ public class SustainedNoteController : MonoBehaviour
          rb.velocity = Vector2.left * velocity * Time.deltaTime;
         // Cambiar de color si está presionada
         spriteRenderer.color = isPressed ? Color.yellow : originalColor;
-        if (isSustainedNoteActive && Time.time - startTime >= sustainedDuration)
+        //if (isSustainedNoteActive && Time.time - startTime >= sustainedDuration)
+        //{
+        //    isSustainedNoteActive = false;
+        //    DeleteNote(); 
+        //}
+    }
+
+    void Update()
+    {
+        if (isPressed)
         {
-            isSustainedNoteActive = false;
-            DeleteNote(); 
+            sceneController.IncrementCombo();
         }
     }
 
@@ -64,13 +73,17 @@ public class SustainedNoteController : MonoBehaviour
     public void StartSustainedNote()
     {
         startTime = Time.time;
-        isSustainedNoteActive = true;
+       //isSustainedNoteActive = true;
     }
 
     public bool IsNearEnd()
     {
-        // Verificar si la nota está cerca del final basado en la tolerancia
-        return transform.position.x <= originalScale.x * endTolerance;
+        // Verifica si la nota está cerca del final de su recorrido
+        float noteWidth = GetComponent<SpriteRenderer>().bounds.size.x;
+        float currentX = transform.position.x;
+        float endX = transform.position.x + noteWidth;
+
+        return Mathf.Abs(currentX - endX) <= endTolerance;
     }
     public void SetWidth(float width)
     {

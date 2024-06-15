@@ -57,7 +57,7 @@ public class SceneController : MonoBehaviour
         }
     }
 
-    private void IncrementCombo()
+    public void IncrementCombo()
     {
         contadorCombo++;
         UpdatedComboText();

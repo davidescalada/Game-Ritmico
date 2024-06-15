@@ -9,10 +9,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float returnDelay;
     [SerializeField] float goodRange;     
     [SerializeField] float perfectRange;
-    [SerializeField] float almostRange;  
+    [SerializeField] float almostRange;
 
+    public GameObject sustainedNoteDetectorObject;
     public GameObject upperDetector;
-    public GameObject centerDetector;
     public GameObject lowerDetector;
 
     private NoteDetector upperNoteDetector;
@@ -21,13 +21,16 @@ public class PlayerController : MonoBehaviour
 
     public static event Action<string> OnNoteCollided;
 
+    private SustainedNoteDetector sustainedNoteDetector;
     private SustainedNoteController activeSustainedNote;
 
     void Start()
     {
         upperNoteDetector = upperDetector.GetComponent<NoteDetector>();
-        centerNoteDetector = centerDetector.GetComponent<NoteDetector>();
+
         lowerNoteDetector = lowerDetector.GetComponent<NoteDetector>();
+
+        sustainedNoteDetector = sustainedNoteDetectorObject.GetComponent<SustainedNoteDetector>();
     }
 
     void Update()
@@ -58,9 +61,9 @@ public class PlayerController : MonoBehaviour
 
     private void StartSustainedNote()
     {
-        if (activeSustainedNote == null)
+        if (activeSustainedNote == null && sustainedNoteDetector.HasCollidingNotes())
         {
-            Collider2D noteCollider = centerNoteDetector.GetFirstCollidingNote(); // Supongamos que la nota sostenida está en el centro
+            Collider2D noteCollider = sustainedNoteDetector.GetFirstCollidingNote(); // Supongamos que la nota sostenida está en el centro
             if (noteCollider != null)
             {
                 SustainedNoteController sustainedNote = noteCollider.GetComponent<SustainedNoteController>();
