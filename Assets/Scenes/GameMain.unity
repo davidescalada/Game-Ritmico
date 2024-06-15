@@ -443,9 +443,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 100
   returnDelay: 0.1
-  excellentRange: 0.2
-  goodRange: 0.4
-  perfectRange: 0.3
+  goodRange: 0.1
+  perfectRange: 0.2
+  almostRange: 0.3
   upperDetector: {fileID: 487779764}
   centerDetector: {fileID: 868790865}
   lowerDetector: {fileID: 1804804765}
@@ -507,19 +507,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   notePrefab: {fileID: 217066853577432221, guid: b6d90d16223f0b14e83e21eae36eea0d, type: 3}
+  sustainedNotePrefab: {fileID: 5257606173385268805, guid: d0b01eb6820252a4aacbd0c41cad683d, type: 3}
   upperPosition: {x: 9.2, y: 0.43}
-  lowerPosition: {x: 9.2, y: -1.42}
-  centerPosition: {x: 9.2, y: -3.35}
+  lowerPosition: {x: 9.2, y: -3.35}
+  centerPosition: {x: 9.2, y: -1.42}
   audioSource: {fileID: 173318617}
   spawnInterval: 0.62
   delayBeforeMusic: 0
   targetFrequencies:
   - 300
-  - 500
-  - 700
+  - 600
   frequencyTolerance: 50
   minNoteInterval: 0.54
   intervalDecreaseAmount: 0.01
+  sustainedNoteFrequency: 800
+  sustainedNoteCooldown: 1
 --- !u!4 &173318616
 Transform:
   m_ObjectHideFlags: 0
@@ -1037,7 +1039,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 395009940}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 956.94995, y: 213.20471, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1110,7 +1112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2455,6 +2457,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13a3a6bf879f48c4dbf8b6318b1c4ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  imagePrefab: {fileID: 5862833945827927860, guid: cf00f50c0195ed740a7b30ecfdac01e5, type: 3}
+  images:
+  - {fileID: 21300000, guid: 33c9857edb3c3ad459d303e299a11df6, type: 3}
+  - {fileID: 21300000, guid: ce1b4410b8716654e9fbcc93a259385d, type: 3}
+  effectDuration: 5
+  imageDuration: 2
+  cooldown: 0.5
 --- !u!114 &1176875240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2490,12 +2499,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1176875236}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1031.9977, y: 960.7171, z: -4.061779}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 71.99768, y: 420.7171, z: -4.061779}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1391529749}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1204775359
 GameObject:
@@ -2843,6 +2852,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1176875242}
   - {fileID: 643109094}
   - {fileID: 182184135}
   - {fileID: 1456026519}
@@ -3630,5 +3640,4 @@ SceneRoots:
   - {fileID: 868790869}
   - {fileID: 1804804769}
   - {fileID: 839588748}
-  - {fileID: 1176875242}
   - {fileID: 395009942}

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class NotasRespawn : MonoBehaviour
 {
     public GameObject notePrefab; // Prefab de la nota
+    public GameObject sustainedNotePrefab; // Prefab de la nota sostenida
     public Vector2 upperPosition;
     public Vector2 lowerPosition;
     public Vector2 centerPosition;
@@ -17,8 +18,13 @@ public class NotasRespawn : MonoBehaviour
     public float minNoteInterval; // Intervalo mínimo entre la generación de notas para cada frecuencia objetivo
     public float intervalDecreaseAmount = 0.01f; // Cantidad por la que disminuir el intervalo cada 10 segundos
 
+    public float sustainedNoteFrequency; // Frecuencia específica para la nota sostenida
+    public float sustainedNoteCooldown = 1.0f; // Cooldown entre la generación de notas sostenidas
 
     private Dictionary<float, float> lastNoteTimes = new Dictionary<float, float>(); // Registro de los últimos tiempos de generación de notas para cada frecuencia objetivo
+    private Dictionary<float, float> lastSustainedNoteTimes = new Dictionary<float, float>(); // Registro de los últimos tiempos de generación de notas sostenidas para cada frecuencia objetivo
+ 
+    private List<NoteInfo> sustainedNotes = new List<NoteInfo>(); // Registro de las notas sostenidas activas
     private float[] spectrum = new float[1024];
     private int beatIndex = 0;
 
@@ -28,6 +34,12 @@ public class NotasRespawn : MonoBehaviour
         foreach (float frequency in targetFrequencies)
         {
             lastNoteTimes[frequency] = -minNoteInterval; // Inicializar con un valor que garantice que la primera nota se generará inmediatamente
+        }
+
+        // Inicializar el último tiempo de generación de la nota sostenida
+        if (!lastSustainedNoteTimes.ContainsKey(sustainedNoteFrequency))
+        {
+            lastSustainedNoteTimes[sustainedNoteFrequency] = -sustainedNoteCooldown; // Inicializar con un valor que garantice que la primera nota sostenida se generará inmediatamente
         }
 
         // Iniciar la corutina para el respawn de notas
@@ -60,6 +72,8 @@ public class NotasRespawn : MonoBehaviour
                 lastNoteTimes[frequency] = Time.time; // Actualizar el último tiempo de generación de nota para esta frecuencia
             }
         }
+        // Manejar la frecuencia de la nota sostenida
+        HandleSustainedNote();
     }
 
     bool IsFrequencyDetected(float frequency)
@@ -94,13 +108,84 @@ public class NotasRespawn : MonoBehaviour
                 return upperPosition;
             case 1:
                 return lowerPosition;
-            case 2:
-                return centerPosition;
+            //case 2:
+            //    return centerPosition;
             default:
                 return Vector2.zero;
         }
     }
 
+    Vector2 GetSpawnPositionForSustainedNote()
+    {
+        return centerPosition;
+    }
+    void HandleSustainedNote()
+    {
+        if (IsFrequencyDetected(sustainedNoteFrequency))
+        {
+            if (Time.time - lastSustainedNoteTimes[sustainedNoteFrequency] > sustainedNoteCooldown)
+            {
+
+                // Crear una nueva nota sostenida
+                Vector2 spawnPosition = GetSpawnPositionForSustainedNote();
+                GameObject sustainedNote = Instantiate(sustainedNotePrefab, spawnPosition, Quaternion.identity);
+
+                // Asignar un ancho específico a la nota sostenida al momento de su creación
+                float width = GetSustainedNoteWidth();
+                sustainedNote.GetComponent<SustainedNoteController>().SetWidth(width);
+                sustainedNotes.Add(new NoteInfo(sustainedNote, Time.time, sustainedNoteFrequency));
+                // Actualizar el tiempo de la última generación de la nota sostenida
+                lastSustainedNoteTimes[sustainedNoteFrequency] = Time.time;
+                //sustainedNotes[sustainedNoteFrequency] = new NoteInfo(sustainedNote, Time.time, sustainedNoteFrequency);
+
+            }
+            //else
+            //{
+            //    // Actualizar la duración de la nota sostenida
+            //    NoteInfo noteInfo = sustainedNotes[sustainedNoteFrequency];
+            //    float duration = Time.time - noteInfo.startTime;
+            //    // Aquí puedes definir la escala en el eje X de acuerdo a la duración
+            //    noteInfo.noteObject.GetComponent<SustainedNoteController>().SetWidth(duration);
+            //}
+        }
+    }
+
+    float GetSustainedNoteWidth()
+    {
+        // Por ahora, usa un valor aleatorio entre 2 números. Puedes ajustar esta lógica según tus necesidades.
+        return Random.Range(1.0f, 3.0f); // Ancho aleatorio entre 1 y 3, ajusta los valores según sea necesario
+    }
+
+
+    //void HandleSustainedNote()
+    //{
+    //    if (IsFrequencyDetected(sustainedNoteFrequency))
+    //    {
+    //        if (!sustainedNotes.ContainsKey(sustainedNoteFrequency))
+    //        {
+    //            // Crear una nueva nota sostenida
+    //            Vector2 spawnPosition = GetSpawnPositionForSustainedNote();
+    //            GameObject sustainedNote = Instantiate(sustainedNotePrefab, spawnPosition, Quaternion.identity);
+    //            sustainedNotes[sustainedNoteFrequency] = new NoteInfo
+    //            {
+    //                noteObject = sustainedNote,
+    //                startTime = Time.time
+    //            };
+    //        }
+    //        else
+    //        {
+    //            // Actualizar la duración de la nota sostenida
+    //            NoteInfo noteInfo = sustainedNotes[sustainedNoteFrequency];
+    //            float duration = Time.time - noteInfo.startTime;
+    //            noteInfo.noteObject.transform.localScale = new Vector3(duration, noteInfo.noteObject.transform.localScale.y, noteInfo.noteObject.transform.localScale.z);
+    //        }
+    //    }
+    //    else if (sustainedNotes.ContainsKey(sustainedNoteFrequency))
+    //    {
+    //        // Finalizar la nota sostenida
+    //        sustainedNotes.Remove(sustainedNoteFrequency);
+    //    }
+    //}
     IEnumerator SpawnNotes()
     {
         while (true)
@@ -135,6 +220,7 @@ public class NotasRespawn : MonoBehaviour
         }
     }
 }
+
 
 
 

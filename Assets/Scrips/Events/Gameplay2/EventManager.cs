@@ -24,13 +24,22 @@ public class EventManager : MonoBehaviour
         }
 
         IEvent selectedEvent;
+        int attempts = 0;
         do
         {
             selectedEvent = events[Random.Range(0, events.Count)];
-        } while (selectedEvent == lastEvent);
+            attempts++;
+        } while (selectedEvent == lastEvent && attempts < events.Count);
 
-        selectedEvent.Execute();
-        lastEvent = selectedEvent;
+        if (selectedEvent != lastEvent || attempts >= events.Count)
+        {
+            selectedEvent.Execute();
+            lastEvent = selectedEvent;
+        }
+        else
+        {
+            Debug.LogWarning("No se pudo seleccionar un evento diferente al último.");
+        }
     }
 
     public void TriggerSpecificEvent(int index)
@@ -38,6 +47,7 @@ public class EventManager : MonoBehaviour
         if (index >= 0 && index < events.Count)
         {
             events[index].Execute();
+            lastEvent = events[index];
         }
         else
         {
@@ -45,3 +55,4 @@ public class EventManager : MonoBehaviour
         }
     }
 }
+

@@ -46,6 +46,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log("Choco con el player");
             SceneManager.LoadScene("Gameplay3");
         }
     }

@@ -39,7 +39,6 @@ public class DistanceEventTrigger : MonoBehaviour
         }
         else if (!triggered5 && distancePercentage <= 15)
         {
-            Debug.Log("SE SUPONE QUE ESTE ES EL EVENTO2, VIBRACION ?");
             eventManager.TriggerSpecificEvent(1); // Asumiendo que el evento de vibración es el Event2
             triggered5 = true;
         }
