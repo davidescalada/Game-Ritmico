@@ -11,6 +11,7 @@ public class ConsolaSimulada : MonoBehaviour
     public Transform inputFieldParent;  // El padre donde se instanciarán los nuevos InputFields
     public TMP_Text resultadoText;
     public List<Vector2> posicionesInputFields; // Lista de posiciones para los InputFields
+    public GameObject objetoAActivar;
 
     private enum Paso
     {
@@ -174,6 +175,12 @@ public class ConsolaSimulada : MonoBehaviour
         {
             resultadoText.text += c;
             yield return new WaitForSeconds(0.1f); // Esperar un tiempo entre cada carácter
+        }
+
+        // Activar el objeto y su hijo al finalizar el mensaje
+        if (objetoAActivar != null)
+        {
+            objetoAActivar.SetActive(true);
         }
     }
 }
