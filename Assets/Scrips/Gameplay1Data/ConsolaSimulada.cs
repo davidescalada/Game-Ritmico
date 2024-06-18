@@ -178,6 +178,7 @@ public class ConsolaSimulada : MonoBehaviour
         }
 
         // Activar el objeto y su hijo al finalizar el mensaje
+        yield return new WaitForSeconds(2f);
         if (objetoAActivar != null)
         {
             objetoAActivar.SetActive(true);
