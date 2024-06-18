@@ -7,11 +7,12 @@ TagManager:
   - Notas
   - NotaGud
   - ResetCombo
+  - NotasSostenidas
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Gameplay
   - Water
   - UI
   - 

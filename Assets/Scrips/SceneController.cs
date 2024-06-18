@@ -46,7 +46,7 @@ public class SceneController : MonoBehaviour
     {
         ShowFeedback(result);
 
-        if (result == "¡Excelente!" || result == "Bien" || result == "Perfecto")
+        if (result == "¡Excelente!" || result == "Bien" || result == "Por poco")
         {
             IncrementCombo();
             enemyController.MoveLeft();
@@ -57,7 +57,7 @@ public class SceneController : MonoBehaviour
         }
     }
 
-    private void IncrementCombo()
+    public void IncrementCombo()
     {
         contadorCombo++;
         UpdatedComboText();
@@ -82,7 +82,7 @@ public class SceneController : MonoBehaviour
 
     private IEnumerator ClearFeedback()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         feedbackText.text = "";
     }
 }

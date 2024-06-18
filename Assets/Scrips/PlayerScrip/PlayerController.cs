@@ -7,12 +7,12 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] float returnDelay;
-    [SerializeField] float excellentRange = 0.1f;
-    [SerializeField] float goodRange = 0.2f;
-    [SerializeField] float perfectRange = 0.3f;
+    [SerializeField] float goodRange;     
+    [SerializeField] float perfectRange;
+    [SerializeField] float almostRange;
 
+    public GameObject sustainedNoteDetectorObject;
     public GameObject upperDetector;
-    public GameObject centerDetector;
     public GameObject lowerDetector;
 
     private NoteDetector upperNoteDetector;
@@ -21,16 +21,22 @@ public class PlayerController : MonoBehaviour
 
     public static event Action<string> OnNoteCollided;
 
+    private SustainedNoteDetector sustainedNoteDetector;
+    private SustainedNoteController activeSustainedNote;
+
     void Start()
     {
         upperNoteDetector = upperDetector.GetComponent<NoteDetector>();
-        centerNoteDetector = centerDetector.GetComponent<NoteDetector>();
+
         lowerNoteDetector = lowerDetector.GetComponent<NoteDetector>();
+
+        sustainedNoteDetector = sustainedNoteDetectorObject.GetComponent<SustainedNoteDetector>();
     }
 
     void Update()
     {
         CheckNoteKeys();
+        CheckSustainedNoteEnd();
     }
 
     private void CheckNoteKeys()
@@ -43,13 +49,62 @@ public class PlayerController : MonoBehaviour
         {
             ProcessNoteHit(lowerNoteDetector);
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        //if (Input.GetKeyDown(KeyCode.RightArrow))
+        //{
+        //    ProcessNoteHit(centerNoteDetector);
+        //}
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            ProcessNoteHit(centerNoteDetector);
+            StartSustainedNote();
         }
     }
 
-    private void ProcessNoteHit(NoteDetector noteDetector)
+    private void StartSustainedNote()
+    {
+        if (activeSustainedNote == null && sustainedNoteDetector.HasCollidingNotes())
+        {
+            Collider2D noteCollider = sustainedNoteDetector.GetFirstCollidingNote(); // Supongamos que la nota sostenida está en el centro
+            if (noteCollider != null)
+            {
+                SustainedNoteController sustainedNote = noteCollider.GetComponent<SustainedNoteController>();
+                if (sustainedNote != null)
+                {
+                    activeSustainedNote = sustainedNote;
+                    activeSustainedNote.SetPressed(true);
+                    activeSustainedNote.StartSustainedNote();
+                }
+            }
+        }
+    }
+
+    private void CheckSustainedNoteEnd()
+    {
+        if (activeSustainedNote != null)
+        {
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                activeSustainedNote.SetPressed(false);
+                if (activeSustainedNote.IsNearEnd())
+                {
+                    Debug.Log("EXCELENTE");
+                    OnNoteCollided?.Invoke("¡Excelente!");
+                }
+                else
+                {
+                    Debug.Log("FALLO");
+                    OnNoteCollided?.Invoke("Falló");
+                }
+                activeSustainedNote.DeleteNote();
+                activeSustainedNote = null;
+            }
+            else if (Input.GetKey(KeyCode.Space))
+            {
+                OnNoteCollided?.Invoke("¡Excelente!");
+            }
+        }
+    }
+
+        private void ProcessNoteHit(NoteDetector noteDetector)
     {
         if (noteDetector.HasCollidingNotes())
         {
@@ -58,22 +113,24 @@ public class PlayerController : MonoBehaviour
             {
                 float collisionTime = noteDetector.GetNoteCollisionTime(noteCollider);
                 float hitTime = Mathf.Abs(Time.time - collisionTime); // Calcular hitTime desde la colisión
-                Debug.Log("Hit Time: " + hitTime);
+                
+                Debug.Log($"Checking hit time: {hitTime}");
+                Debug.Log($"goodRange: {goodRange}, perfectRange: {perfectRange}, almostRange: {almostRange}");
 
-                if (hitTime <= excellentRange)
-                {
-                    Debug.Log("EXCELENTE");
-                    OnNoteCollided?.Invoke("¡Excelente!");
-                }
-                else if (hitTime <= goodRange)
+                if (hitTime <= goodRange)
                 {
                     Debug.Log("BIEN");
                     OnNoteCollided?.Invoke("Bien");
                 }
                 else if (hitTime <= perfectRange)
                 {
-                    Debug.Log("PERFECTO");
-                    OnNoteCollided?.Invoke("Perfecto");
+                    Debug.Log("EXCELENTE");
+                    OnNoteCollided?.Invoke("¡Excelente!");
+                }
+                else if (hitTime <= almostRange)
+                {
+                    Debug.Log("Por poco");
+                    OnNoteCollided?.Invoke("Por poco");
                 }
                 else
                 {
