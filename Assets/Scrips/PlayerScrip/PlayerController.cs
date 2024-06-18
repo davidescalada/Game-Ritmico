@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] float returnDelay;
-    [SerializeField] float goodRange;     
+    [SerializeField] float goodRange;
     [SerializeField] float perfectRange;
     [SerializeField] float almostRange;
 
@@ -16,7 +14,6 @@ public class PlayerController : MonoBehaviour
     public GameObject lowerDetector;
 
     private NoteDetector upperNoteDetector;
-    private NoteDetector centerNoteDetector;
     private NoteDetector lowerNoteDetector;
 
     public static event Action<string> OnNoteCollided;
@@ -27,9 +24,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         upperNoteDetector = upperDetector.GetComponent<NoteDetector>();
-
         lowerNoteDetector = lowerDetector.GetComponent<NoteDetector>();
-
         sustainedNoteDetector = sustainedNoteDetectorObject.GetComponent<SustainedNoteDetector>();
     }
 
@@ -49,10 +44,6 @@ public class PlayerController : MonoBehaviour
         {
             ProcessNoteHit(lowerNoteDetector);
         }
-        //if (Input.GetKeyDown(KeyCode.RightArrow))
-        //{
-        //    ProcessNoteHit(centerNoteDetector);
-        //}
         if (Input.GetKeyDown(KeyCode.Space))
         {
             StartSustainedNote();
@@ -63,7 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         if (activeSustainedNote == null && sustainedNoteDetector.HasCollidingNotes())
         {
-            Collider2D noteCollider = sustainedNoteDetector.GetFirstCollidingNote(); // Supongamos que la nota sostenida está en el centro
+            Collider2D noteCollider = sustainedNoteDetector.GetFirstCollidingNote();
             if (noteCollider != null)
             {
                 SustainedNoteController sustainedNote = noteCollider.GetComponent<SustainedNoteController>();
@@ -104,7 +95,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-        private void ProcessNoteHit(NoteDetector noteDetector)
+    private void ProcessNoteHit(NoteDetector noteDetector)
     {
         if (noteDetector.HasCollidingNotes())
         {
@@ -112,8 +103,8 @@ public class PlayerController : MonoBehaviour
             if (noteCollider != null)
             {
                 float collisionTime = noteDetector.GetNoteCollisionTime(noteCollider);
-                float hitTime = Mathf.Abs(Time.time - collisionTime); // Calcular hitTime desde la colisión
-                
+                float hitTime = Mathf.Abs(Time.time - collisionTime);
+
                 Debug.Log($"Checking hit time: {hitTime}");
                 Debug.Log($"goodRange: {goodRange}, perfectRange: {perfectRange}, almostRange: {almostRange}");
 
@@ -132,20 +123,26 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Por poco");
                     OnNoteCollided?.Invoke("Por poco");
                 }
-                else
-                {
-                    Debug.Log("FALLO");
-                    OnNoteCollided?.Invoke("Falló");
-                }
-                
+
                 NotasController notasController = noteCollider.GetComponent<NotasController>();
-                
+
                 if (notasController != null)
                 {
                     notasController.DeleteNote();
                 }
             }
+            else
+            {
+                Debug.Log("FALLO - No hay nota en la colisión");
+                OnNoteCollided?.Invoke("Falló");
+            }
+        }
+        else
+        {
+            Debug.Log("FALLO - No hay nota en la colisión");
+            OnNoteCollided?.Invoke("Falló");
         }
     }
 }
+
 

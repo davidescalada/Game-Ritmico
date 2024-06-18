@@ -47,12 +47,12 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.CompareTag("Player")) 
         {
+            isMoving = false;
             Debug.Log("Choco con el player");
             if (sceneController != null)
             {
                 sceneController.SetLlego(true);
             }
-           
         }
     }
 }

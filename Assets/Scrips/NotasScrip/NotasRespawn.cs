@@ -158,7 +158,7 @@ public class NotasRespawn : MonoBehaviour
     float GetSustainedNoteWidth()
     {
         // Por ahora, usa un valor aleatorio entre 2 números. Puedes ajustar esta lógica según tus necesidades.
-        return Random.Range(3.0f, 9.0f); // Ancho aleatorio entre 1 y 3, ajusta los valores según sea necesario
+        return Random.Range(5.0f, 15.0f); // Ancho aleatorio entre 1 y 3, ajusta los valores según sea necesario
     }
 
 
