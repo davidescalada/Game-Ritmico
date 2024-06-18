@@ -27,9 +27,12 @@ public class NotasRespawn : MonoBehaviour
     private List<NoteInfo> sustainedNotes = new List<NoteInfo>(); // Registro de las notas sostenidas activas
     private float[] spectrum = new float[1024];
     private int beatIndex = 0;
-
+    private float songDuration;
+    // Evento para indicar el final de la emisión de notas
+    public event System.Action OnNotesFinished;
     void Start()
     {
+        songDuration = audioSource.clip.length;
         // Inicializar los últimos tiempos de generación de notas para cada frecuencia objetivo
         foreach (float frequency in targetFrequencies)
         {
@@ -50,6 +53,8 @@ public class NotasRespawn : MonoBehaviour
 
         // Iniciar la corutina para disminuir gradualmente el valor de minNoteInterval después de 50 segundos
         StartCoroutine(DecreaseMinNoteIntervalGradually(30.0f, 50.0f, intervalDecreaseAmount));
+
+        StartCoroutine(SongTimer(songDuration));
     }
 
     void Update()
@@ -153,7 +158,7 @@ public class NotasRespawn : MonoBehaviour
     float GetSustainedNoteWidth()
     {
         // Por ahora, usa un valor aleatorio entre 2 números. Puedes ajustar esta lógica según tus necesidades.
-        return Random.Range(1.0f, 3.0f); // Ancho aleatorio entre 1 y 3, ajusta los valores según sea necesario
+        return Random.Range(3.0f, 9.0f); // Ancho aleatorio entre 1 y 3, ajusta los valores según sea necesario
     }
 
 
@@ -217,6 +222,7 @@ public class NotasRespawn : MonoBehaviour
             minNoteInterval -= intervalDecreaseRate;
             elapsedTime += 1f;
             yield return new WaitForSeconds(1f); // Esperar un segundo entre cada decremento
+
         }
     }
 
@@ -237,6 +243,12 @@ public class NotasRespawn : MonoBehaviour
         }
     }
 
+    IEnumerator SongTimer(float duration)
+    {
+        
+        yield return new WaitForSeconds(duration);
+        OnNotesFinished?.Invoke();
+    }
 }
 
 

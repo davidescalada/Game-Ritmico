@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 public class EnemyController : MonoBehaviour
 {
@@ -8,9 +8,10 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 targetPosition;
     private bool isMoving = false;
-
+    private SceneController sceneController;
     void Start()
     {
+        sceneController = FindObjectOfType<SceneController>();
         // Inicialmente, la posición objetivo es la misma que la posición actual
         targetPosition = transform.position;
     }
@@ -44,10 +45,14 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player")) 
         {
             Debug.Log("Choco con el player");
-            SceneManager.LoadScene("Gameplay3");
+            if (sceneController != null)
+            {
+                sceneController.SetLlego(true);
+            }
+           
         }
     }
 }

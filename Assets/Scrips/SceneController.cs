@@ -10,9 +10,18 @@ public class SceneController : MonoBehaviour
     public TMP_Text feedbackText;
     public int contadorCombo = 0;
     public EnemyController enemyController;
+    private NotasRespawn notasRespawn;
+    private bool llego = false;
     void Start()
     {
         enemyController = FindObjectOfType<EnemyController>();
+        notasRespawn = FindObjectOfType<NotasRespawn>();
+
+        // Suscribirse al evento OnNotesFinished
+        if (notasRespawn != null)
+        {
+            notasRespawn.OnNotesFinished += HandleNotesFinished;
+        }
     }
 
     void Update()
@@ -84,5 +93,26 @@ public class SceneController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         feedbackText.text = "";
+    }
+
+    private void HandleNotesFinished()
+    {
+        // Aquí manejamos el final de la emisión de notas
+        Debug.Log("La emisión de notas ha terminado.");
+        Invoke("CheckLlego", 3.0f);
+    }
+
+    public void SetLlego(bool value)
+    {
+        llego = value;
+    }
+
+    private void CheckLlego()
+    {
+        if (llego)
+        {
+            Debug.Log("Cambiando a escena 3");
+            SceneManager.LoadScene("Gameplay3");
+        }
     }
 }
