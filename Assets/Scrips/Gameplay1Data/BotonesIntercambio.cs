@@ -27,6 +27,9 @@ public class IntercambioBotones : MonoBehaviour
         {
             nuevoBotonNo = Instantiate(botonSiPrefab, botonNo.transform.position, botonNo.transform.rotation, botonNo.transform.parent);
 
+            // Añadir un listener al nuevo botón No para cambiar de escena
+            nuevoBotonNo.onClick.AddListener(CambiarEscena);
+
             // Añadir un listener para los eventos del puntero al nuevo botón No
             PointerHandler newPointerHandler = nuevoBotonNo.gameObject.AddComponent<PointerHandler>();
             newPointerHandler.onPointerExit += OnPointerExitNewNo;

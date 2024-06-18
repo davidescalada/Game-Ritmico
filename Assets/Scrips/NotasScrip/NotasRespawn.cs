@@ -46,7 +46,7 @@ public class NotasRespawn : MonoBehaviour
         StartCoroutine(SpawnNotes());
 
         // Iniciar la música después de un retraso
-        StartCoroutine(StartMusicAfterDelay());
+        //StartCoroutine(StartMusicAfterDelay());
 
         // Iniciar la corutina para disminuir gradualmente el valor de minNoteInterval después de 50 segundos
         StartCoroutine(DecreaseMinNoteIntervalGradually(30.0f, 50.0f, intervalDecreaseAmount));
@@ -219,6 +219,24 @@ public class NotasRespawn : MonoBehaviour
             yield return new WaitForSeconds(1f); // Esperar un segundo entre cada decremento
         }
     }
+
+    public void PauseMusic()
+    {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Pause();
+        }
+    }
+
+    public void ResumeMusic()
+    {
+        if (!audioSource.isPlaying)
+        {
+            StartCoroutine(StartMusicAfterDelay());
+            audioSource.UnPause();
+        }
+    }
+
 }
 
 

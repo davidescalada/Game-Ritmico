@@ -12,6 +12,8 @@ public class ConsolaSimulada : MonoBehaviour
     public TMP_Text resultadoText;
     public List<Vector2> posicionesInputFields; // Lista de posiciones para los InputFields
     public GameObject objetoAActivar;
+    public AudioSource audioSource; // AudioSource para los efectos de sonido
+    public AudioClip sonidoActivacion; // Efecto de sonido para la activación
 
     private enum Paso
     {
@@ -179,10 +181,12 @@ public class ConsolaSimulada : MonoBehaviour
 
         // Activar el objeto y su hijo al finalizar el mensaje
         yield return new WaitForSeconds(2f);
-        if (objetoAActivar != null)
+        if (objetoAActivar != null & sonidoActivacion != null)
         {
-            objetoAActivar.SetActive(true);
+            audioSource.PlayOneShot(sonidoActivacion);
+           
         }
+        objetoAActivar.SetActive(true);
     }
 }
 
