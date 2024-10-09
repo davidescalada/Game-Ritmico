@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float speed = 1.0f; // Velocidad del movimiento del enemigo
-    public float moveDistance = 10.0f; // Distancia a mover cada vez que se llama a MoveLeft
+    public float speed; // Velocidad del movimiento del enemigo
+    public float moveDistance; // Distancia a mover cada vez que se llama a MoveLeft
 
     private Vector3 targetPosition;
     private bool isMoving = false;
@@ -47,7 +47,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.CompareTag("Player")) 
         {
-            isMoving = false;
+            speed = 0;
             Debug.Log("Choco con el player");
             if (sceneController != null)
             {

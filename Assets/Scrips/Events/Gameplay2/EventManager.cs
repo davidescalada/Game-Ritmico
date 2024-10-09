@@ -12,7 +12,7 @@ public class EventManager : MonoBehaviour
         events.Add(GetComponent<Event1G2>());
         events.Add(GetComponent<Event2G2>());
         events.Add(GetComponent<Event3G2>());
-        events.Add(GetComponent<Event4G2>());
+        
     }
 
     public void TriggerRandomEvent()

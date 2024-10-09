@@ -114,5 +114,9 @@ public class SceneController : MonoBehaviour
             Debug.Log("Cambiando a escena 3");
             SceneManager.LoadScene("Gameplay3");
         }
+        else
+        {
+            SceneManager.LoadScene("GameMain");
+        }
     }
 }

@@ -55,14 +55,14 @@ public class SustainedNoteController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("ResetCombo"))
-    //    {
-    //        sceneController.ResetCombo();
-    //        DeleteNote();
-    //    }
-    //}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("ResetCombo"))
+        {
+            sceneController.ResetCombo();
+            DeleteNote();
+        }
+    }
 
     public void SetPressed(bool pressed)
     {

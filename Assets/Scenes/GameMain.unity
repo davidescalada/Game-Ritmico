@@ -2742,7 +2742,6 @@ GameObject:
   - component: {fileID: 1176875241}
   - component: {fileID: 1176875240}
   - component: {fileID: 1176875239}
-  - component: {fileID: 1176875238}
   m_Layer: 0
   m_Name: EventManager
   m_TagString: Untagged
@@ -2760,18 +2759,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbdcbfc56f833094180965b3fe401c93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1176875238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176875236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b3e35ff4fd1527409e0d16d3bcb202a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1176875239
@@ -3241,6 +3228,7 @@ GameObject:
   - component: {fileID: 1435583976}
   - component: {fileID: 1435583978}
   - component: {fileID: 1435583977}
+  - component: {fileID: 1435583980}
   - component: {fileID: 1435583979}
   m_Layer: 0
   m_Name: EnemyUI
@@ -3259,7 +3247,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -473.07, y: -141.5, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.31, y: 0.31, z: 0.31}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 839588748}
@@ -3320,7 +3308,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.509434, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3362,9 +3350,30 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1.9999999}
+  m_Offset: {x: -0.00007247925, y: 0.000015258789}
+  m_Size: {x: 4.4100003, y: 5.3400006}
   m_Direction: 0
+--- !u!95 &1435583980
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435583975}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7c5b718ec36d8244c8e112a15425d837, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1438335311
 GameObject:
   m_ObjectHideFlags: 0
@@ -3391,7 +3400,7 @@ Transform:
   m_GameObject: {fileID: 1438335311}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.87, y: 0.21, z: 0.20849988}
+  m_LocalPosition: {x: -10.26, y: 0.02, z: 0.20849988}
   m_LocalScale: {x: 1, y: 10.59, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
